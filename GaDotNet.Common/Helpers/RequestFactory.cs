@@ -64,7 +64,8 @@ namespace GaDotNet.Common.Helpers
 				PageDomain = pageView.DomainName,
 				PageTitle = pageView.PageTitle,
 				PageUrl = pageView.Url,
-				AnalyticsAccountCode = googleAnalyticsCode
+				AnalyticsAccountCode = googleAnalyticsCode,
+                Utma = pageView.Utma;
 			};
 		}
 
@@ -78,7 +79,8 @@ namespace GaDotNet.Common.Helpers
 			return new TrackingRequest {
 				TrackingEvent = googleEvent,
 				PageDomain = googleEvent.DomainName,
-				AnalyticsAccountCode = googleAnalyticsCode
+				AnalyticsAccountCode = googleAnalyticsCode,
+                Utma = googleEvent.Utma
 			};
 		}
 

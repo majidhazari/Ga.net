@@ -39,6 +39,7 @@ namespace GaDotNet.Common.Data
 		public string ReferralSource = "(direct)";
 		public string Medium = "(none)";
 		public string Campaign = "(direct)";
+	    public string Utma;
 
 		public GoogleEvent TrackingEvent;
 		public GoogleTransaction TrackingTransaction;
@@ -82,13 +83,13 @@ namespace GaDotNet.Common.Data
 		{
 			int domainHash = getDomainHash ();
 
-			string utma = String.Format ("{0}.{1}.{2}.{3}.{4}.{5}",
-				domainHash,
-				new Random ().Next (1000000000),
-				timeStampCurrent,
-				timeStampCurrent,
-				timeStampCurrent,
-				visitCount);
+			string utma = Utma ?? String.Format ("{0}.{1}.{2}.{3}.{4}.{5}",
+			                                     domainHash,
+			                                     new Random ().Next (1000000000),
+			                                     timeStampCurrent,
+			                                     timeStampCurrent,
+			                                     timeStampCurrent,
+			                                     visitCount);
 
 			//referral informaiton
 			string utmz = String.Format ("{0}.{1}.{2}.{3}.utmcsr={4}|utmccn={5}|utmcmd={6}",

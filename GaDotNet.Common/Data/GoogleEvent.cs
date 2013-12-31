@@ -27,6 +27,7 @@ namespace GaDotNet.Common.Data
 	public class GoogleEvent
 	{
 		public string DomainName { get; private set; }
+        public string Utma { get; private set; }
 		public string Category { get; private set; }
 		public string Action { get; private set; }
 		public string Label { get; private set; }
@@ -37,9 +38,10 @@ namespace GaDotNet.Common.Data
 		/// </summary>
 		/// <param name="category">The event category.</param>
 		/// <param name="action">The event action.</param>
-		/// <param name="value">The event value.</param>
-		/// <param name="label">The optional event label.</param>
-		public GoogleEvent (string domainName, string category, string action,
+        /// <param name="utma">UTMA cookie. (not required)</param>		
+		/// <param name="label">The optional event label.</param> 
+        /// <param name="value">The event value.</param>       
+		public GoogleEvent (string domainName,string category, string action, string utma=null,
 			string label=null, int? value=null)
 		{
 			if (domainName == null) {
@@ -57,6 +59,7 @@ namespace GaDotNet.Common.Data
 			Action = action;
 			Label = label;
 			Value = value;
+		    Utma = utma;
 		}
 	}
 }

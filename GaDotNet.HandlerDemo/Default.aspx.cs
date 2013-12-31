@@ -40,7 +40,7 @@ namespace GaDotNet.HandlerDemo
 			GooglePageView pageView = new GooglePageView (
 				txtPageTitle.Text,
 				txtPageDomainName.Text,
-				txtPageURL.Text);
+				txtPageURL.Text,null);
 
 			TrackingRequest request = new RequestFactory (ConfigurationSettings.GoogleAccountCode)
 				.BuildRequest (pageView);
@@ -60,6 +60,7 @@ namespace GaDotNet.HandlerDemo
 				txtEventDomain.Text,
 				txtEventCategory.Text,
 				txtEventAction.Text,
+                null,
 				txtEventLabel.Text,
 				eventValue);
 

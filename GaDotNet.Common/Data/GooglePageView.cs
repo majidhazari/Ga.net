@@ -26,6 +26,7 @@ namespace GaDotNet.Common.Data
 		public string PageTitle { get; private set; }
 		public string DomainName { get; private set; }
 		public string Url { get; private set; }
+        public string Utma { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GooglePageView"/> class.
@@ -33,7 +34,8 @@ namespace GaDotNet.Common.Data
 		/// <param name="pageTitle">The page title. (required)</param>
 		/// <param name="domainName">domain hostname ie www.yourdomain.com (required)</param>
 		/// <param name="url">The URL. (required)</param>
-		public GooglePageView(string pageTitle, string domainName, string url)
+        /// <param name="utma">UTMA cookie. (not required)</param>
+		public GooglePageView(string pageTitle, string domainName, string url, string utma=null)
 		{
 			if (String.IsNullOrEmpty (pageTitle)) {
 				throw new Exception ("'PageTitle' is a required field");
@@ -48,6 +50,7 @@ namespace GaDotNet.Common.Data
 			PageTitle = pageTitle;
 			DomainName = domainName;
 			Url = url;
+		    Utma = utma;
 		}
 	}
 }
