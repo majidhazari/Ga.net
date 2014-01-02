@@ -30,7 +30,7 @@ namespace GaDotNet.HandlerDemo
 {
 	public static class AccountID
 	{
-		public static string value = "UA-4040403-8";
+        public static string value = "UA-46775147-1";
 	}
 
 	public partial class Demo : System.Web.UI.Page
@@ -42,8 +42,11 @@ namespace GaDotNet.HandlerDemo
 				txtPageDomainName.Text,
 				txtPageURL.Text,null);
 
-			TrackingRequest request = new RequestFactory (ConfigurationSettings.GoogleAccountCode)
+			TrackingRequest request = new RequestFactory (AccountID.value)
 				.BuildRequest (pageView);
+
+            request.SetCustomVariable(1, new GoogleCustomVariable(txtCVKey1.Text, txtCVValue1.Text));
+
 			GoogleTracking.FireTrackingEvent(request);
 
 			divAction.InnerText = "Page view successfully tracked";
@@ -64,8 +67,9 @@ namespace GaDotNet.HandlerDemo
 				txtEventLabel.Text,
 				eventValue);
 
-			TrackingRequest request = new RequestFactory (ConfigurationSettings.GoogleAccountCode)
+            TrackingRequest request = new RequestFactory(AccountID.value)
 				.BuildRequest (eventToTrack);
+
 			GoogleTracking.FireTrackingEvent(request);
 
 			divAction.InnerText = "Event successfully tracked";

@@ -65,7 +65,7 @@ namespace GaDotNet.Common.Helpers
 				PageTitle = pageView.PageTitle,
 				PageUrl = pageView.Url,
 				AnalyticsAccountCode = googleAnalyticsCode,
-                Utma = pageView.Utma;
+                Utma = pageView.Utma
 			};
 		}
 

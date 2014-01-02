@@ -56,6 +56,19 @@
 								relative to root (ie. /test.aspx)
 							</td>
 						</tr>
+
+   						<tr>
+							<td valign="top">
+								Custom var 1
+							</td>
+							<td>
+								Key: <asp:TextBox ID="txtCVKey1" runat="server"></asp:TextBox>
+							</td>
+  							<td>
+								Value: <asp:TextBox ID="txtCVValue1" runat="server"></asp:TextBox>
+							</td>
+						</tr>
+
 						<tr>
 							<td>
 								&nbsp;

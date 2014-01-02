@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\ConfigurationSettings.cs" />
+    <Compile Include="Data\GoogleCustomVariable.cs" />
     <Compile Include="Data\GoogleEvent.cs" />
     <Compile Include="Data\GooglePageView.cs" />
     <Compile Include="Data\GoogleTransaction.cs" />

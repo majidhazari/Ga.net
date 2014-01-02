@@ -39,7 +39,10 @@ namespace GaDotNet.Common.Data
 		public string ReferralSource = "(direct)";
 		public string Medium = "(none)";
 		public string Campaign = "(direct)";
-	    public string Utma;
+        public string Utma;
+
+        private GoogleCustomVariable[] CustomVariables = new GoogleCustomVariable[5];
+
 
 		public GoogleEvent TrackingEvent;
 		public GoogleTransaction TrackingTransaction;
@@ -51,6 +54,68 @@ namespace GaDotNet.Common.Data
 		protected internal TrackingRequest()
 		{
 		}
+
+        private void CheckCustomVarSlot(int slot)
+        {
+            if (slot < 1 || slot > 5)
+            {
+                throw new InvalidOperationException("Slot must be between 1 and 5");
+            }
+        }
+
+        public void SetCustomVariable(int slot, GoogleCustomVariable variable)
+        {
+            CheckCustomVarSlot(slot);
+            CustomVariables[slot - 1] = variable;
+        }
+
+        public GoogleCustomVariable GetCustomVariable(int slot)
+        {
+            CheckCustomVarSlot(slot);
+            return CustomVariables[slot - 1];
+        }
+
+        private string serializeCusotmVariables()
+        {
+            StringBuilder keys = new StringBuilder();
+            StringBuilder values = new StringBuilder();
+            bool hasSome = false;
+            bool skipped = false;
+            keys.Append("8(");
+            values.Append("9(");
+            for (int i = 0; i < 5;i++ )
+            {
+                var customVariable = CustomVariables[i];
+                if (customVariable != null && customVariable.Key.Length > 0 && customVariable.Value.Length > 0)
+                {
+                    if (hasSome)
+                    {
+                        keys.Append('*');
+                        values.Append('*');
+                    }
+                    if (skipped)
+                    {
+                        keys.Append(i).Append('!');
+                        values.Append(i).Append('!');
+                    }
+                    keys.Append(customVariable.EscapedKey());
+                    values.Append('"').Append(customVariable.EscapedValue()).Append('"');
+                    hasSome = true;
+                }
+                else
+                {
+                    skipped = true;
+                }
+            }
+
+            keys.Append(")");
+            values.Append(")");
+
+            if (hasSome)
+                return keys.ToString() + values.ToString();
+            
+            return "";
+        }
 
 		public Uri TrackingGifUri
 		{
@@ -79,18 +144,24 @@ namespace GaDotNet.Common.Data
 			return a;
 		}
 
+        public string CreateUtma()
+        {
+            int domainHash = getDomainHash();
+
+            return String.Format("{0}.{1}.{2}.{3}.{4}.{5}",
+                                                 domainHash,
+                                                 new Random().Next(1000000000),
+                                                 timeStampCurrent,
+                                                 timeStampCurrent,
+                                                 timeStampCurrent,
+                                                 visitCount);
+        }
+
 		private string getUtmcCookieString()
 		{
 			int domainHash = getDomainHash ();
 
-			string utma = Utma ?? String.Format ("{0}.{1}.{2}.{3}.{4}.{5}",
-			                                     domainHash,
-			                                     new Random ().Next (1000000000),
-			                                     timeStampCurrent,
-			                                     timeStampCurrent,
-			                                     timeStampCurrent,
-			                                     visitCount);
-
+		    string utma = Utma ?? CreateUtma();
 			//referral informaiton
 			string utmz = String.Format ("{0}.{1}.{2}.{3}.utmcsr={4}|utmccn={5}|utmcmd={6}",
 				domainHash,
@@ -148,17 +219,22 @@ namespace GaDotNet.Common.Data
 			addKvp ("utmac", AnalyticsAccountCode); // Your GA account code
 			addKvp ("utmcc", getUtmcCookieString());// cookie string (encoded)
 
+		    var eventString = "";
 			if (TrackingEvent != null) {
 				//taken from http://code.google.com/apis/analytics/docs/tracking/gaTrackingTroubleshooting.html
-				var eventString = String.Format ("5({0}*{1}*{2})({3})",
+				eventString = String.Format ("5({0}*{1}*{2})({3})",
 					TrackingEvent.Category,
 					TrackingEvent.Action,
 					TrackingEvent.Label,
 					TrackingEvent.Value);
 
-				addKvp ("utme", Uri.EscapeDataString (eventString));
-				addKvp ("utmt", "event");
+                addKvp ("utmt", "event");
 			}
+
+		    var utmeString = Uri.EscapeDataString(eventString) + serializeCusotmVariables();
+            
+            if(utmeString.Length > 0)
+                addKvp ("utme", utmeString);
 
 			if (TrackingTransaction != null) {
 				//taken from http://code.google.com/apis/analytics/docs/tracking/gaTrackingTroubleshooting.html
